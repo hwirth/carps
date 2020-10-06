@@ -1,0 +1,108 @@
+TODO
+====
+[ ] vertical/horizontalAlign, offset --> sprite
+[ ] History
+[ ] Visible tiles: Range only correct, when scene wider than tall
+[ ] body.blur -> hide cursor
+[ ] find_obfuscation_axis defined in sprite_editor and viewport, unify, add_vector in update() also misplaced
+
+
+Alexander Nakarada
+https://www.serpentsoundstudios.com/
+https://www.free-stock-music.com/alexander-nakarada-adventure.html
+
+
+
+
+https://rvros.itch.io/isometric-village
+https://www.1001freefonts.com/
+
+
+
+function inside(point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+
+    var x = point[0], y = point[1];
+
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0], yi = vs[i][1];
+        var xj = vs[j][0], yj = vs[j][1];
+
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+
+    return inside;
+};
+
+Usage:
+
+// array of coordinates of each vertex of the polygon
+var polygon = [ [ 1, 1 ], [ 1, 2 ], [ 2, 2 ], [ 2, 1 ] ];
+inside([ 1.5, 1.5 ], polygon); // true
+
+Better:
+https://github.com/mikolalysenko/robust-point-in-polygon/blob/master/robust-pnp.js
+
+
+
+
+const image = new Image();
+image.src = 'images/scenery/trees-and-bushes.png';
+image.addEventListener( 'load', ()=>{
+	const canvas = document.createElement( 'canvas' );
+	canvas.width = image.naturalWidth;
+	canvas.height = image.naturalHeight;
+	const context = canvas.getContext( '2d' );
+	context.drawImage( image, 0, 0 );
+
+	self.sprites = {
+		largeTree1: sprite_from_image( canvas, 0, 7, 113, 119 ),
+		largeTree2: sprite_from_image( canvas, 119, 7, 103, 140 ),
+		smallTree1: sprite_from_image( canvas, 224, 8, 30, 37 ),
+		smallTree2: sprite_from_image( canvas, 260, 1, 26, 30 ),
+		smallTree3: sprite_from_image( canvas, 239, 116, 33, 41 ),
+		flower1: sprite_from_image( canvas, 227, 55, 21, 19 ),
+		flower2: sprite_from_image( canvas, 227, 88, 21, 18 ),
+		flower3: sprite_from_image( canvas, 255, 50, 15, 13 ),
+		grass: sprite_from_image( canvas, 258, 65, 16, 40 ),
+	};
+
+	done();
+});
+
+
+
+
+
+	/**
+	 * init()
+	 */
+	function init () {
+		function assets_loaded () {
+			return [
+				new Sprites( self ),
+				//new Sounds( self ),
+			];
+		}
+
+		function world_loaded () {
+			return [
+				new World( self ),
+			];
+		}
+
+		return Promise.all( assets_loaded() ).then( add_properties_to_self )
+		.then( ()=>Promise.all( world_loaded() ) ).then( add_properties_to_self )
+		.then( async ()=>{
+			self.viewport = new Viewport( self );
+			self.viewport.update();
+
+		}).catch( (error)=>{
+			app.log( error );
+		});
+
+	}

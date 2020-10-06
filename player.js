@@ -1,0 +1,31 @@
+// player.js
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////119:/
+// ISOMETRIC RPG - copy(l)eft 2020 - https://harald.ist.org/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////119:/
+
+
+/**
+ * Player()
+ */
+export const Player = function (app, rpg, new_avatar) {
+	const self = this;
+
+	this.avatar;
+
+
+	/**
+	 * init()
+	 */
+	function init (new_avatar) {
+		self.avatar = new_avatar;
+	} // init
+
+
+	// CONSTRUCTOR
+
+	init( new_avatar );
+
+}; // Player
+
+
+//EOF
